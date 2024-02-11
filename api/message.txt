@@ -1,0 +1,260 @@
+import discord
+from discord.ext import commands,tasks
+from random import randrange
+import asyncio
+import aiohttp
+
+with open('test.txt', 'r') as file:
+   message_message = file.read().split()
+token="tokenhereeee"
+delay = 0
+message_sender_active = False
+client = commands.Bot(command_prefix='.',self_bot=True)
+async def send_with_retry(ctx, message, delay):
+    while message_sender_active:
+        try:
+            await ctx.send(message)
+            break  # Message sent successfully, exit retry loop
+        except discord.HTTPException:
+            await asyncio.sleep(10)  # Retry after 10 seconds if there's a network error
+        except discord.DiscordServerError as e:
+            if e.code in (500, 502, 503, 504):
+                await asyncio.sleep(10)  # Retry after 10 seconds for server errors
+        except aiohttp.client_exceptions.ClientOSError as e:
+            print(f"Error: {e}. Retrying in 0.1 seconds...")
+            # Log the error to error.log for further analysis
+            with open('error.log', 'a') as error_file:
+                error_file.write(f"Error: {e}\n")
+            await asyncio.sleep(20)  # Retry after 20 seconds for ClientOSError
+            continue  # Continue to the next iteration of the loop
+        except Exception as e:
+            print(e)
+            await asyncio.sleep(5)
+            continue
+async def send_messages_script(ctx,user_mentions=None):
+  global message_sender_active
+  if message_sender_active:
+    return
+  message_sender_active = True
+  await ctx.message.delete()
+  while message_sender_active:
+    for message in message_message:
+      if not message_sender_active:
+        break
+      if user_mentions:
+        mentions = ' '.join([mention.mention for mention in user_mentions])
+        await send_with_retry(ctx,f"# > {message} {mentions}",delay)
+      else:
+        await send_with_retry(ctx,f"# > {message}",delay)
+      await asyncio.sleep(delay)
+@client.event
+async def on_ready():
+  if not message_sender_active:
+    print(f"Logged in as {client.user.name}")
+    stream = discord.Streaming(
+        name="Elixir🤙",
+        url="https://www.twitch.tv/elixir045"
+    )
+    await client.change_presence(activity=stream)
+@client.command()
+async def start(ctx,*user_mentions:discord.User):
+  global message_sender_active
+  if message_sender_active:
+    return
+  await send_messages_script(ctx,user_mentions)
+@client.command()
+async def stop(ctx):
+  global message_sender_active
+  if message_sender_active:
+    message_sender_active = False
+    await ctx.message.delete()
+@client.command()
+async def wincondition(ctx,user_mentions):
+  await ctx.message.delete()
+  await ctx.send(f"# {user_mentions} = {randrange(99)}% your win condition")
+@client.command()
+async def muist(ctx,user_mentions):
+  await ctx.message.delete()
+  await ctx.send(f"# {user_mentions} = {randrange(99)}% este muist")
+@client.command()
+async def prost(ctx,user_mentions):
+  await ctx.message.delete()
+  await ctx.send(f"# {user_mentions} = {randrange(99)}% este prost futu n cur")
+@client.command()
+async def curva(ctx,user_mentions):
+  await ctx.message.delete()
+  await ctx.send(f"# {user_mentions} = {randrange(99)}% este o curva neiesita din casa ")
+@client.command()
+async def gay(ctx,user_mentions):
+  await ctx.message.delete()
+  await ctx.send(f"# {user_mentions} = {randrange(99)}% 🏳️‍🌈")
+@client.command()
+async def dragoste(ctx, user_mentions):    
+    delay = 1.25
+    await ctx.message.delete()
+    await ctx.send(f'# Hey draguto 🥺❤️ {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# Te iubesc mai mult ca luna depe cer ❤️🌙 {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# te ador steaua mea 🥺⭐ {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# in fiecare zi imi alini inima ❤️🥺 {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# de cand te cunosc ma simt alt om 🥺❤️ {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# Nu as mai avea viata daca ai disparea ❤️ {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# vrea-u sa te sarut pana te sufoci in iubirea mea ❤️💘 {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# esti comoara mea mica ❤️🧬 {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# ti-as face mic dejun la pat ❤️😜 {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# te ador dragostea mea ❤️🥺 {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# te iubesc pitico 🥺💘 {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# as face nani cu tine 🥺💘 {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# ingeru meu pazitor 🥺💘 {user_mentions}')
+    await asyncio.sleep(delay)
+    await ctx.send(f'# esti cea mai frumoasa fata 🥺💘 {user_mentions}')
+@client.command()
+
+async def dick(ctx,user_mentions):
+
+  await ctx.message.delete()
+
+  await ctx.send(f"# {user_mentions} are pula de {randrange(99)}cm")
+@client.command()
+
+async def Telefon(ctx, user_mentions):    
+
+    delay = 3
+
+    await ctx.message.delete()
+
+    await ctx.send(f'# calling............... {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# NU RASPUNDE TARFA........ {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# PLS WAKE UP YOUR TELEFON TARFO............ {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# ALOOOOOOOOOOOOOOOOOOOOOO........... {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# RASPUNDE FUTEM-AS PE CALU TAU........... {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# DACA NU RASPUNZI O SUN PE MA-TA GRADINARE.............. {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# RASPUNDE FERMIERULE CA IMI BAG PULA IN MA-TA............ {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# RIDICA TELEFONU MANCAMIAI PULA DE LEU........... {user_mentions}')
+
+    await asyncio.sleep(delay) 
+
+    await asyncio.sleep(delay) 
+
+    await ctx.send(f'# BAGAMI-AS PULA IN VACA TA CE O MULGI CA NU RASPUNZI..........{user_mentions}')  
+@client.command()
+
+async def chelios(ctx, user_mentions):    
+
+    delay = 2
+
+    await ctx.message.delete()
+
+    await ctx.send(f'# hey cheliosu meu mic❤️❤️😍😍 {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# vreau sa iti mangai chelia {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# te iubesc cheliosule {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# heyy Mr Proper {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# ce te-as fute cheliosu meuu {user_mentions}')
+
+async def sclav(ctx,user_mentions):
+
+  await ctx.message.delete()
+
+  await ctx.send(f"# {user_mentions} Este Sclav {randrange(99)} La Suta")
+@client.command()
+
+async def muie(ctx,user_mentions):
+
+  await ctx.message.delete()
+
+  await ctx.send(f"# {user_mentions} A primit Muie De La {randrange(99)} DE OAMENI") 
+@client.command()
+
+async def dreptu(ctx,user_mentions):
+
+  await ctx.message.delete()
+
+  await ctx.send(f"# {user_mentions} SCLAVULE NAI DREPTURI UMANE {randrange(20)} LA SUTA")
+@client.command()
+
+async def injuraturi(ctx, user_mentions):    
+
+    delay = 1
+
+    await ctx.message.delete()
+
+    await ctx.send(f'# HEY TARFO  {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# AM FUTUTO PE MA-TA  {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# DE AZI IMI ZICI TATA  {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# NU O SA TE MAI CHINUI SA MULGI CAPRA,DE ACUM MA MULGI PE MINE DE PULA {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# SARI INTRUN PICIOR CA SA ITI ARATI FORMELE {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'# ITI TRAG CHILOTII ALBI IN CUR {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'#  SA TE INVART DE URECHI CA PE SPINER {user_mentions}')
+
+    await asyncio.sleep(delay)
+
+    await ctx.send(f'#  # > # SA IMI DAU SPERMA PE TACTU SA IL DESNIGGERESC {user_mentions}')
+
+    await asyncio.sleep(delay) 
+
+    await asyncio.sleep(delay) 
+
+    await ctx.send(f'# SA II BAG LU MA-TA O CHEAPA IN CUR {user_mentions}') 
+client.run(token, bot=False) 
